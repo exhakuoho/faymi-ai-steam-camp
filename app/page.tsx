@@ -4,9 +4,36 @@ import Image from "next/image";
 const days = [
   ["01", "🤖", "AI 程式設計與機器人控制", "認識 AI、積木程式、感測器與控制邏輯，完成第一個機器人闖關。", "完成基礎控制程式"],
   ["02", "🧠", "AI 進階任務", "挑戰自動循跡、避障與多重感測器，練習任務拆解與 AI 決策概念。", "完成自主移動任務"],
-  ["03", "⚡", "綠色能源探索", "進行電解水、氫能與燃料電池實驗，理解能源轉換與 SDGs。", "完成能源實驗紀錄"],
-  ["04", "🛠️", "工程設計與創意改造", "規劃車體與任務機構，經歷設計、組裝、測試、失敗與修正。", "完成團隊創意原型"],
-  ["05", "🏁", "自走車成果挑戰", "整合五天所學，完成駕駛關卡、隱藏任務、團隊競賽與成果分享。", "帶走作品、證書與回憶"],
+  ["03", "⚡", "泡泡發電・氫能實驗室", "用鉛筆電解水製造 H₂、O₂ 泡泡，再看燃料電池把氫氣變回電力與水，親眼看見能源轉換。", "完成氫能實驗觀察單"],
+  ["04", "🧠", "AI 指令闖關島", "從生活中的 AI 出發，用圖像化程式安排指令、如果／否則條件，和隊友一起除錯解任務。", "完成 AI 程式挑戰"],
+  ["05", "🏁", "小小駕訓總決賽", "檢查車況、辨識交通標誌，挑戰前進、轉彎、精準停車、繞錐與指定路線，最後進行團隊積分賽。", "通過駕訓挑戰並領獎"],
+];
+
+const activityHighlights = [
+  {
+    day: "DAY 03",
+    icon: "⚡",
+    title: "泡泡發電實驗室",
+    lead: "一支鉛筆、一杯鹽水，竟然能把水變成兩種氣體？",
+    points: ["鉛筆電解水", "收集 H₂／O₂", "燃料電池發電"],
+    art: "energy",
+  },
+  {
+    day: "DAY 04",
+    icon: "🧠",
+    title: "AI 指令闖關島",
+    lead: "讓螢幕裡的指令真的動起來，找出錯誤、修好它，再闖下一關！",
+    points: ["圖像化程式", "如果／否則", "小隊除錯任務"],
+    art: "code",
+  },
+  {
+    day: "DAY 05",
+    icon: "🏁",
+    title: "小小駕訓總決賽",
+    lead: "會前進還不夠，還要會看標誌、繞錐、停得準，才能拿下駕照挑戰！",
+    points: ["交通標誌", "繞錐與停車", "團隊積分賽"],
+    art: "drive",
+  },
 ];
 
 const faqs = [
@@ -63,8 +90,25 @@ export default function Home() {
         <div className="day-list">{days.map((day)=><article className={`day-card day-${day[0]}`} key={day[0]}><div className="day-label"><span>DAY {day[0]}</span><b>{day[1]}</b></div><div className="day-copy"><h3>{day[2]}</h3><p>{day[3]}</p></div><div className="day-result"><small>當日成果</small><b>{day[4]}</b></div></article>)}</div>
       </section>
 
+      <section className="section highlight-section" id="highlights">
+        <div className="section-heading centered"><span className="section-kicker">DAY 03—05 HIGHLIGHTS</span><h2>後三天，任務越來越好玩！</h2><p>從看得見的能源泡泡，到會思考的程式，最後把技術開上迷你賽道。</p></div>
+        <div className="highlight-grid">
+          {activityHighlights.map((item) => (
+            <article className={`highlight-card highlight-${item.art}`} key={item.day}>
+              <div className="highlight-art" aria-hidden="true">
+                {item.art === "energy" && <><span className="bolt">⚡</span><div className="beaker"><i className="bubble b1" /><i className="bubble b2" /><i className="bubble b3" /><b>H₂</b><strong>O₂</strong></div></>}
+                {item.art === "code" && <><div className="code-window"><i /><i /><i /><b>IF&nbsp; ▶</b><strong>ELSE&nbsp; ↻</strong></div><span className="code-spark">✦</span></>}
+                {item.art === "drive" && <><div className="mini-car"><i /><i /><b>AI</b></div><span className="cone cone-one">▲</span><span className="cone cone-two">▲</span><span className="road-line" /></>}
+              </div>
+              <div className="highlight-copy"><span className="highlight-day">{item.day} <i>{item.icon}</i></span><h3>{item.title}</h3><p>{item.lead}</p><ul>{item.points.map((point) => <li key={point}>{point}</li>)}</ul></div>
+            </article>
+          ))}
+        </div>
+        <div className="safety-strip"><Image src="/faymi-mascot.png" width={82} height={142} alt="飛米樂高馬可提醒實驗安全" /><p><b>馬可的任務提醒</b><span>能源實驗會配戴護目鏡，氫氣與燃料電池示範由老師操作；所有活動都有老師與助教分組陪伴。</span></p><strong>安全實作 ✓</strong></div>
+      </section>
+
       <section className="outcome-section">
-        <div className="outcome-inner"><div><span className="section-kicker light">CAMP OUTCOMES</span><h2>五天之後，孩子帶走的不只是一台車</h2><p>更重要的是：遇到問題時，知道如何觀察、拆解、測試與修正。</p></div><ul><li><b>01</b> AI 與程式邏輯基礎</li><li><b>02</b> 感測器與機器人控制</li><li><b>03</b> 氫能與能源轉換觀念</li><li><b>04</b> 工程設計循環實作</li><li><b>05</b> 團隊溝通與成果表達</li></ul></div>
+        <div className="outcome-inner"><div><span className="section-kicker light">CAMP OUTCOMES</span><h2>五天之後，孩子帶走的不只是一台車</h2><p>更重要的是：遇到問題時，知道如何觀察、拆解、測試與修正。</p></div><ul><li><b>01</b> AI 與程式邏輯基礎</li><li><b>02</b> 感測器與機器人控制</li><li><b>03</b> 氫能與能源轉換觀念</li><li><b>04</b> 除錯與問題拆解能力</li><li><b>05</b> 駕駛判斷與團隊合作</li></ul></div>
       </section>
 
       <section className="section registration-section" id="registration">
