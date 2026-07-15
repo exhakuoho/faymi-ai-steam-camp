@@ -1,4 +1,5 @@
 import RegistrationForm from "./registration-form";
+import Image from "next/image";
 
 const days = [
   ["01", "🤖", "AI 程式設計與機器人控制", "認識 AI、積木程式、感測器與控制邏輯，完成第一個機器人闖關。", "完成基礎控制程式"],
@@ -20,7 +21,7 @@ export default function Home() {
   return (
     <main id="top">
       <header className="site-header">
-        <a className="brand" href="#top"><span className="brand-mark">AI</span><span><b>科技探索營</b><small>AI × STEAM CAMP</small></span></a>
+        <a className="brand" href="#top"><Image className="brand-logo" src="/faymi-logo.jpg" width={48} height={48} alt="飛米樂高 FAYMIBRICK" /><span><b>AI 科技探索營</b><small>FAYMIBRICK × STEAM CAMP</small></span></a>
         <nav><a href="#features">營隊特色</a><a href="#schedule">五日課程</a><a href="#info">報名資訊</a><a href="#faq">家長 FAQ</a></nav>
         <a className="button button-small" href="#registration">立即報名</a>
       </header>
@@ -35,9 +36,9 @@ export default function Home() {
             <div className="hero-actions"><a className="button button-primary" href="#registration">搶先登記名額 <span>→</span></a><a className="button button-ghost" href="#schedule">看看五天玩什麼</a></div>
             <div className="trust-row"><span>✓ 小班分組</span><span>✓ 午餐與保險</span><span>✓ 完整教材設備</span></div>
           </div>
-          <div className="hero-visual" aria-label="科技機器人示意圖">
-            <div className="visual-ring ring-one" /><div className="visual-ring ring-two" />
-            <div className="robot"><div className="antenna" /><div className="face"><i /><i /></div><div className="screen">HELLO!</div><div className="wheels"><i /><i /></div></div>
+          <div className="hero-visual" aria-label="飛米樂高馬可角色">
+            <div className="hero-sun" /><div className="doodle doodle-one">✦</div><div className="doodle doodle-two">●</div>
+            <Image className="hero-mascot" src="/faymi-mascot.png" width={520} height={900} priority alt="拿著科技箱子的飛米樂高馬可角色" />
             <div className="chip chip-ai"><b>AI</b><small>人工智慧</small></div><div className="chip chip-energy"><b>H₂</b><small>綠色能源</small></div><div className="chip chip-code"><b>&lt;/&gt;</b><small>程式設計</small></div><div className="chip chip-car"><b>🏎</b><small>自走車</small></div>
           </div>
         </div>
@@ -73,7 +74,7 @@ export default function Home() {
 
       <section className="section faq-section" id="faq"><div className="section-heading centered"><span className="section-kicker">PARENT FAQ</span><h2>家長常見問題</h2></div><div className="faq-list">{faqs.map(([q,a])=><details key={q}><summary>{q}<span>＋</span></summary><p>{a}</p></details>)}</div></section>
 
-      <footer><div className="footer-brand"><span className="brand-mark">AI</span><div><b>AI × STEAM 科技探索營</b><p>讓孩子把想像，變成可以運作的科技作品。</p></div></div><div><b>聯絡方式</b><p>md406md406@gmail.com</p><p>07-3814526 分機 15453</p></div><div><b>營隊資訊</b><p>2026 暑假五日梯次</p><p>每日 08:30–16:00</p></div><small>© 2026 AI × STEAM CAMP. All rights reserved.</small></footer>
+      <footer><div className="footer-brand"><Image className="footer-logo" src="/faymi-logo.jpg" width={64} height={64} alt="飛米樂高" /><div><b>飛米樂高 × AI 科技探索營</b><p>讓孩子把想像，變成可以運作的科技作品。</p></div></div><div><b>聯絡方式</b><p>md406md406@gmail.com</p><p>07-3814526 分機 15453</p></div><div><b>營隊資訊</b><p>2026 暑假五日梯次</p><p>每日 08:30–16:00</p></div><small>© 2026 FAYMIBRICK × AI STEAM CAMP. All rights reserved.</small></footer>
       <a className="mobile-cta" href="#registration">立即報名・NT$8,000</a>
     </main>
   );
