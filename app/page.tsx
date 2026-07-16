@@ -39,7 +39,7 @@ const activityHighlights = [
 const faqs = [
   ["孩子完全沒有寫過程式，可以參加嗎？", "可以。課程從圖像化積木程式與基本操作開始，老師和助教會依學員程度分組陪伴。"],
   ["需要自己準備電腦或機器人嗎？", "需要自備一台可正常使用的筆記型電腦與充電器；機器人、實驗器材與教材皆由營隊提供。也請攜帶水壺、文具與個人用品。"],
-  ["NT$8,000 包含哪些項目？", "包含五日課程、教材與設備使用、實驗耗材、每日午餐、活動保險、成果證書及競賽活動。"],
+  ["NT$9,500 包含哪些項目？", "包含五日課程、教材與設備使用、實驗耗材、每日午餐、活動保險、成果證書及競賽活動。"],
   ["送出表單就算完成報名嗎？", "送出後會取得報名編號，工作人員將於 2 個工作日內聯絡確認。完成繳費後才正式保留名額。"],
   ["營隊日期與地點在哪裡？", "本頁目前開放 2026 暑假五日梯次預先登記，每日時間為 08:30–16:00。前兩天在飛米樂高教室，後三天移動至國立高雄科技大學建工校區。詳細地址與報到方式將於開課通知中提供。"],
 ];
@@ -75,7 +75,7 @@ export default function Home() {
         <div><span>📅</span><p><small>活動期間</small><b>2026 暑假・連續 5 天</b></p></div>
         <div><span>⏰</span><p><small>每日時間</small><b>08:30–16:00</b></p></div>
         <div><span>🎒</span><p><small>招生對象</small><b>國小三年級～國中三年級</b></p></div>
-        <div><span>💳</span><p><small>活動費用</small><b>NT$8,000／人</b></p></div>
+        <div><span>💳</span><p><small>活動費用</small><b>NT$9,500／人</b></p></div>
       </section>
 
       <section className="location-journey" aria-label="五日營隊上課地點">
@@ -118,14 +118,14 @@ export default function Home() {
       </section>
 
       <section className="section registration-section" id="registration">
-        <div className="registration-intro"><span className="section-kicker">REGISTRATION</span><h2>2026 暑假梯次<br />開始預先登記</h2><p>每梯未達 15 人不開班，最多 40 人。送出後會取得報名編號，並由工作人員聯絡確認名額與繳費。</p><div className="price-card"><small>五日完整課程</small><strong><i>NT$</i>8,000</strong><span>／人</span><ul><li>五日課程與完整教材</li><li>設備、實驗耗材與午餐</li><li>活動保險與成果證書</li></ul></div><p className="privacy-note">🔒 身分證字號僅供活動保險使用，報名資料不會公開顯示。</p></div>
+        <div className="registration-intro"><span className="section-kicker">REGISTRATION</span><h2>2026 暑假梯次<br />開始預先登記</h2><p>每梯未達 15 人不開班，最多 40 人。送出後會取得報名編號，並由工作人員聯絡確認名額與繳費。</p><div className="price-card"><small>五日完整課程</small><strong><i>NT$</i>9,500</strong><span>／人</span><ul><li>五日課程與完整教材</li><li>設備、實驗耗材與午餐</li><li>活動保險與成果證書</li></ul></div><p className="privacy-note">🔒 身分證字號僅供活動保險使用，報名資料不會公開顯示。</p></div>
         <RegistrationForm />
       </section>
 
       <section className="section faq-section" id="faq"><div className="section-heading centered"><span className="section-kicker">PARENT FAQ</span><h2>家長常見問題</h2></div><div className="faq-list">{faqs.map(([q,a])=><details key={q}><summary>{q}<span>＋</span></summary><p>{a}</p></details>)}</div></section>
 
       <footer><div className="footer-brand"><Image className="footer-logo" src="/faymi-logo.jpg" width={64} height={64} alt="飛米樂高" /><div><b>飛米樂高 × AI 科技探索營</b><p>讓孩子把想像，變成可以運作的科技作品。</p></div></div><div><b>聯絡方式</b><p>faymieducation@gmail.com</p><p>07-3814526 分機 15453</p></div><div><b>營隊資訊</b><p>前兩天：飛米樂高教室</p><p>後三天：高科大建工校區</p></div><small>© 2026 FAYMIBRICK × AI STEAM CAMP. All rights reserved.</small></footer>
-      <a className="mobile-cta" href="#registration">立即報名・NT$8,000</a>
+      <a className="mobile-cta" href="#registration">立即報名・NT$9,500</a>
     </main>
   );
 }
