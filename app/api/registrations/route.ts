@@ -38,6 +38,17 @@ type RegistrationData = {
 // 與 aisteam-camp2／faymi-aisteam 靜態站共用同一個 Apps Script，欄位名稱需保持一致
 const DEFAULT_SHEETS_WEBHOOK =
   "https://script.google.com/macros/s/AKfycbx9IwB6g7oSsB9TqDRQsNEapckwR1evxNtNWAsGrJlj0sWxylhkc-hXLQGD5LkrbLcXfA/exec";
+const DEFAULT_NOTIFICATION_EMAIL = "randdlaboratary@gmail.com";
+
+function escapeHtml(value: string) {
+  return value.replace(/[&<>'"]/g, (character) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    "'": "&#39;",
+    '"': "&quot;",
+  })[character] || character);
+}
 
 async function sendToGoogleSheet(data: RegistrationData) {
   const webhookUrl = process.env.SHEETS_WEBHOOK_URL || DEFAULT_SHEETS_WEBHOOK;
@@ -72,6 +83,11 @@ async function sendToGoogleSheet(data: RegistrationData) {
     body: JSON.stringify(payload),
   });
   if (!response.ok) throw new Error(`Google Sheet 服務回應 ${response.status}`);
+
+  const result = await response.json().catch(() => null) as { ok?: boolean; error?: string } | null;
+  if (result?.ok === false) {
+    throw new Error(result.error || "Google Sheet 服務未完成寫入");
+  }
 }
 
 async function sendRegistrationNotification(data: {
@@ -84,8 +100,14 @@ async function sendRegistrationNotification(data: {
   email: string;
 }) {
   const apiKey = process.env.RESEND_API_KEY;
-  const notificationEmail = process.env.NOTIFICATION_EMAIL;
-  if (!apiKey || !notificationEmail) return;
+  const notificationEmail = process.env.NOTIFICATION_EMAIL || DEFAULT_NOTIFICATION_EMAIL;
+  if (!apiKey) {
+    throw new Error("尚未設定 RESEND_API_KEY");
+  }
+
+  const safe = Object.fromEntries(
+    Object.entries(data).map(([key, value]) => [key, escapeHtml(value)]),
+  ) as typeof data;
 
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -96,8 +118,9 @@ async function sendRegistrationNotification(data: {
     body: JSON.stringify({
       from: process.env.NOTIFICATION_FROM || "FAYMI AI STEAM <onboarding@resend.dev>",
       to: [notificationEmail],
+      reply_to: data.email,
       subject: `[FAYMI AI STEAM] 新報名｜${data.studentName}｜${data.registrationCode}`,
-      html: `<h2>新的營隊報名</h2><p><b>報名編號：</b>${data.registrationCode}</p><p><b>學員：</b>${data.studentName}（${data.school}／${data.grade}）</p><p><b>家長：</b>${data.guardianName}｜${data.guardianPhone}</p><p><b>Email：</b>${data.email}</p><p>完整資料請登入網站管理後台查看。</p>`,
+      html: `<h2>新的營隊報名</h2><p><b>報名編號：</b>${safe.registrationCode}</p><p><b>學員：</b>${safe.studentName}（${safe.school}／${safe.grade}）</p><p><b>家長：</b>${safe.guardianName}｜${safe.guardianPhone}</p><p><b>Email：</b>${safe.email}</p><p>完整資料請登入網站管理後台查看。</p>`,
     }),
   });
   if (!response.ok) throw new Error(`寄信服務回應 ${response.status}`);
@@ -169,7 +192,7 @@ export async function POST(request: Request) {
     } catch (notificationError) {
       console.error("registration notification error", notificationError);
     }
-    return Response.json({ registrationCode }, { status: 201 });
+    return Response.json({ registrationCode, storedInSheet }, { status: 201 });
   } catch (error) {
     console.error("registration error", error);
     return Response.json({ error: "目前無法送出報名，請稍後再試。" }, { status: 500 });
