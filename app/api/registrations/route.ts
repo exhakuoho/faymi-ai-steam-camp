@@ -16,6 +16,64 @@ function makeCode() {
   return `AI${date}-${random}`;
 }
 
+type RegistrationData = {
+  registrationCode: string;
+  studentName: string;
+  school: string;
+  grade: string;
+  birthDate: string;
+  identityNumber: string;
+  guardianName: string;
+  guardianPhone: string;
+  email: string;
+  emergencyName: string;
+  emergencyPhone: string;
+  diet: string;
+  healthNotes: string;
+  learningNotes: string;
+  photoConsent: boolean;
+  privacyConsent: boolean;
+};
+
+// 與 aisteam-camp2／faymi-aisteam 靜態站共用同一個 Apps Script，欄位名稱需保持一致
+const DEFAULT_SHEETS_WEBHOOK =
+  "https://script.google.com/macros/s/AKfycbx9IwB6g7oSsB9TqDRQsNEapckwR1evxNtNWAsGrJlj0sWxylhkc-hXLQGD5LkrbLcXfA/exec";
+
+async function sendToGoogleSheet(data: RegistrationData) {
+  const webhookUrl = process.env.SHEETS_WEBHOOK_URL || DEFAULT_SHEETS_WEBHOOK;
+  const payload = {
+    batch: process.env.SHEETS_BATCH_LABEL || "飛米五日旗艦 AIxSTEAM 未來科技探索營",
+    refCode: data.registrationCode,
+    studentName: data.studentName,
+    school: data.school,
+    stage: data.grade.slice(0, 2),
+    grade: data.grade,
+    gender: "",
+    birth: data.birthDate,
+    idNumber: data.identityNumber,
+    parentName: data.guardianName,
+    relation: "",
+    phone: data.guardianPhone,
+    emergency: `${data.emergencyName}（${data.emergencyPhone}）`,
+    email: data.email,
+    allergies: [],
+    allergyOther: "",
+    diet: data.diet,
+    special: data.healthNotes,
+    notes: data.learningNotes,
+    photoConsent: data.photoConsent ? "同意" : "不同意",
+    termsAgree: data.privacyConsent,
+    signatureName: "",
+    signatureImage: "",
+  };
+  const response = await fetch(webhookUrl, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify(payload),
+  });
+  if (!response.ok) throw new Error(`Google Sheet 服務回應 ${response.status}`);
+}
+
 async function sendRegistrationNotification(data: {
   registrationCode: string;
   studentName: string;
@@ -61,8 +119,7 @@ export async function POST(request: Request) {
       return Response.json({ error: "請輸入有效的電子郵件。" }, { status: 400 });
     }
     const registrationCode = makeCode();
-    const db = await getDb();
-    const cleanData = {
+    const cleanData: RegistrationData = {
       registrationCode,
       studentName: clean(body.studentName, 50),
       school: clean(body.school, 80),
@@ -80,7 +137,25 @@ export async function POST(request: Request) {
       photoConsent: body.photoConsent === true,
       privacyConsent: true,
     };
-    await db.insert(registrations).values(cleanData);
+    // 主要寫入 D1，同步備份到 Google Sheet；兩者只要有一邊成功就算報名成功
+    let storedInDb = false;
+    try {
+      const db = await getDb();
+      await db.insert(registrations).values(cleanData);
+      storedInDb = true;
+    } catch (dbError) {
+      console.error("registration db error", dbError);
+    }
+    let storedInSheet = false;
+    try {
+      await sendToGoogleSheet(cleanData);
+      storedInSheet = true;
+    } catch (sheetError) {
+      console.error("registration sheet error", sheetError);
+    }
+    if (!storedInDb && !storedInSheet) {
+      return Response.json({ error: "目前無法送出報名，請稍後再試。" }, { status: 500 });
+    }
     try {
       await sendRegistrationNotification({
         registrationCode,
